@@ -8,18 +8,40 @@ import gql from 'graphql-tag';
 // binding graphQL query with react components
 //  and then reaching out to the graphQL data
 import { graphql } from 'react-apollo';
-
+import _ from 'lodash';
 
 class SongList extends Component {
 
+    renderSongs() {
+
+        const { songs } = this.props.data;
+        
+        // 1) 
+        // if(songs) {
+            // just make sure that it renders twice
+            //  because the queries issues and it completes
+            // Songs field is not available at the first rendering.
+            // console.log('data: ', this.props.data.songs)
+            return _.map(songs, song => {
+                return <li key={song.id} className="collection-items">
+                    { song.title }
+                </li>;
+            });
+
+        // }
+    }
     
     render() {
+
+        // 2) when 'Songs' is not available
+        if(this.props.data.loading) return <div />;
+
         // ********
         // The returned data from the graphQL query is assigned to 'props' object.
-        console.log(this.props);
-        return <div>
-            SongList
-        </div>
+        // console.log(this.props);
+        return <ul className="collection">
+            { this.renderSongs() }
+        </ul>;
     }
 }
 
