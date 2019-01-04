@@ -1,6 +1,9 @@
 import React, { Component } from 'react';
 import { graphql } from 'react-apollo';
 import gql from 'graphql-tag';
+import { Link, hashHistory } from 'react-router';
+
+import query from '../queries/fetch_song';
 
 class SongCreate extends Component {
 
@@ -12,6 +15,7 @@ class SongCreate extends Component {
 
     handleSubmit(e) {
 
+        // [Mutation]
         // It works with 'gql' down below.
         // sending this values (values in class) to graphQL
         // In other words, sending values from the client and the server.
@@ -20,8 +24,25 @@ class SongCreate extends Component {
             // ****** variables here equivalent to $title in gql
             variables: {
                 title: this.state.title
-            }
-        });
+            },
+            // ******** In order to refetch and render them in the browser again,
+            //      whenever the mutation runs 
+            //      specifically whenever it creates a new song
+            //      we need to use the object as followed.
+            //      Just bear in mind that mutation and query are fully differnt functions.
+
+            // When the fetch is associated with the variable,
+            //      we need to use variable property. However, it is not this time.
+            // refetchQueries: [{ query : query, variables }]
+            
+            refetchQueries: [{ query }]
+
+        // redirect to SongList only after it successfull finishes the mutation
+        // it is same as history.push in the other version of history.
+        }).then(() => hashHistory.push('/'));
+
+        // When fails
+        // catch(() => {})
 
         e.preventDefault();
     }
@@ -37,7 +58,7 @@ class SongCreate extends Component {
         console.log(this.props);
 
         return <div>
-
+            <Link to="/">Back</Link>
             <h3>Create a New Song</h3>
             <form onSubmit= { this.handleSubmit.bind(this) }>
                 <label>Song Title: </label>

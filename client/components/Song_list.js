@@ -3,12 +3,15 @@
 import React, { Component } from 'react';
 
 // allows us to write the GraphQL queries inside of javascript.
-import gql from 'graphql-tag';
+// import gql from 'graphql-tag';
 
 // binding graphQL query with react components
 //  and then reaching out to the graphQL data
 import { graphql } from 'react-apollo';
 import _ from 'lodash';
+import { Link } from 'react-router';
+
+import query from '../queries/fetch_song';
 
 class SongList extends Component {
 
@@ -39,9 +42,17 @@ class SongList extends Component {
         // ********
         // The returned data from the graphQL query is assigned to 'props' object.
         // console.log(this.props);
-        return <ul className="collection">
-            { this.renderSongs() }
-        </ul>;
+        return( 
+        <div>
+            <ul className="collection">
+                { this.renderSongs() }
+            </ul>
+            <Link to="/songs/new"
+                  className="btn-floating btn-large red right"
+            >
+                <i className="material-icons">add</i>
+            </Link>
+        </div>);
     }
 }
 
@@ -51,14 +62,16 @@ class SongList extends Component {
 //  we can get the reuired data only.
 // We do not need to get all data in the mongoDB documents.
 // ************************************************
-const query = gql`
-    query {
-        songs {
-            id
-            title
-        }
-    }
-`;
+
+// In convention, the query should be written in a different file.
+// const query = gql`
+//     query {
+//         songs {
+//             id
+//             title
+//         }
+//     }
+// `;
 
 // export default SongList;
 // The graphQL objeject imported here takes the query; it is a binding.
